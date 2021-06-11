@@ -1,0 +1,12 @@
+{
+   "description" : "The CodeIgniter Application with Composer",
+   "require": {
+      "php": ">=7.3",
+	  "codeigniter/framework": "3.*",
+      "paragonie/random_compat": "2.*",
+      "laminas/laminas-mail": "2.*",
+      "laminas/laminas-escaper": "2.*",
+      "google/recaptcha": "1.*",
+      "pyrocms/lex": "2.*"
+   }
+}

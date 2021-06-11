@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery dragOptions Demos</title>
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="jquery.dragoptions.js" type="text/javascript" language="javascript"></script>
+    <script>
+        $(document).ready(function(){
+            $("#select-single, #select-multiple").dragOptions({
+                onDrag: function(){
+                    console.log('onDrag callback: ', this);
+                },
+                onChange: function(){
+                    console.log('onChange callback: ', this);
+                }
+            });
+        });
+    </script>
+    <style>
+    body { font-family:'Roboto'; background-color:#fafafa;}
+    .container { margin:150px auto;}
+    h2 { margin:20px auto; }
+    </style>
+</head>
+<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/form/Sorting-Select-Options-With-Drag-Drop-jQuery-dragOptions.html">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<div class="container">
+    <h1>jQuery dragOptions Demos</h1>
+    <h2>Single Select</h2>
+    <select id="select-single" size="10" style="width: 400px;" class="form-control">
+        <option value="1">Acura</option>
+        <option value="2">Audi</option>
+        <option value="3">BMW</option>
+        <option value="4">Cadillac</option>
+        <option value="5">Chevrolet</option>
+        <option value="6">Ferrari</option>
+        <option value="7">Ford</option>
+        <option value="8">Honda</option>
+        <option value="9">Lexus</option>
+        <option value="10">Mercedes-Benz</option>
+    </select>
+
+    <br/><br/>
+
+    <h2>Multiple Select</h2>
+    <select id="select-multiple" size="10" multiple style="width: 200px;" class="form-control">
+        <option value="1">Acura</option>
+        <option value="2">Audi</option>
+        <option value="3">BMW</option>
+        <option value="4">Cadillac</option>
+        <option value="5">Chevrolet</option>
+        <option value="6">Ferrari</option>
+        <option value="7">Ford</option>
+        <option value="8">Honda</option>
+        <option value="9">Lexus</option>
+        <option value="10">Mercedes-Benz</option>>
+    </select>
+    </div>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46156385-1', 'cssscript.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

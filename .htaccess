@@ -1,0 +1,71 @@
+
+# Set this to development, staging or production
+SetEnv CI_ENV development
+<IfModule mod_rewrite.c>
+
+    # Make sure directory listing is disabled
+    Options +FollowSymLinks -Indexes
+
+    # disable the Apache MultiViews directive if it is enabled on the server. It plays havoc with URL rewriting
+    Options -MultiViews
+    RewriteEngine on
+
+    # NOTICE: If you get a 404 play with combinations of the following commented out lines
+    #AllowOverride All
+    RewriteBase /
+
+    # remove trailing slash
+    RewriteRule ^(.*)/(\?.*)?$ $1$2 [R=301,L]
+
+    # Send request via index.php (again, not if its a real file or folder)
+    RewriteCond $1 !^(index\.php|partials|layouts|license\.txt|robots\.txt|screenshot\.png|css|js|img|images|fonts)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+
+    # Rewrite "www.example.com -> example.com"
+	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+	RewriteRule ^(.*)$ https://%1/$1 [L,R=301,NE]
+</IfModule>
+
+# mod_headers
+<IfModule mod_headers.c>
+    <FilesMatch "\.(php|html)$">
+        Header set X-Frame-Options "SAMEORIGIN"
+        Header set X-XSS-Protection "1; mode=block"
+    </FilesMatch>
+
+    # Enable HSTS
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Set Content-Security-Policy "upgrade-insecure-requests;"
+    Header always set Content-Security-Policy "upgrade-insecure-requests;"
+
+    # BEGIN HttpHeaders
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# BEGIN WebP Converter
+# ! --- DO NOT EDIT PREVIOUS LINE --- !
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{DOCUMENT_ROOT}/upload-webp/$1.jpg.webp -f
+  RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
+  RewriteRule (.+)\.jpg$ /upload-webp/$1.jpg.webp [NC,T=image/webp,E=cache-control:no-cache,L]
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{DOCUMENT_ROOT}/upload-webp/$1.jpeg.webp -f
+  RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
+  RewriteRule (.+)\.jpeg$ /upload-webp/$1.jpeg.webp [NC,T=image/webp,E=cache-control:no-cache,L]
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{DOCUMENT_ROOT}/upload-webp/$1.png.webp -f
+  RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
+  RewriteRule (.+)\.png$ /upload-webp/$1.png.webp [NC,T=image/webp,E=cache-control:no-cache,L]
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{DOCUMENT_ROOT}/upload-webp/$1.gif.webp -f
+  RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
+  RewriteRule (.+)\.gif$ /upload-webp/$1.gif.webp [NC,T=image/webp,E=cache-control:no-cache,L]
+</IfModule>
+# ! --- DO NOT EDIT NEXT LINE --- !
+# END WebP Converter
