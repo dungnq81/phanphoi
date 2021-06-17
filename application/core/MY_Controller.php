@@ -32,6 +32,8 @@ class MY_Controller extends CI_Controller {
 	 */
 	public $directory;
 
+	public $current_user;
+
 	/**
 	 * MY_Controller constructor.
 	 */
@@ -40,10 +42,20 @@ class MY_Controller extends CI_Controller {
 
 		$this->benchmark->mark( 'my_controller_start' );
 
-		$this->load->library('asset');
+		// Work out controller, method
+		// and make them accessable throught the CI instance
+		ci()->controller = $this->controller = $this->router->class;
+		ci()->method     = $this->method = $this->router->method;
+		ci()->directory  = $this->directory = $this->router->directory;
+
+		$this->load->library( 'asset' );
+		$this->load->library( 'HD/auth' );
+
+		ci()->current_user = $this->current_user = $this->auth->user()->row();
 
 		// add addon asset path and set base url
-		Asset::add_path( 'assets', site_url( 'assets/' ) );
+		Asset::add_path( 'asset', site_url( 'assets/themes/' ) );
+		Asset::add_path( 'asset_admin', site_url( 'assets/admin/' ) );
 		Asset::set_url( base_url() );
 
 		//$this->output->set_header('Content-Type: text/html; charset=UTF-8');
@@ -80,7 +92,13 @@ function _autoload( $class ) {
 
 	// autoload core classes
 	if ( is_file( $location = APPPATH . 'core/' . ucfirst( $class ) . '.php' ) ) {
-		include_once $location;
+		include $location;
+
 		return;
+	}
+
+	// autoload lib classes
+	if ( is_file( $location = APPPATH . 'libraries/' . ucfirst( $class ) . '.php' ) ) {
+		include $location;
 	}
 }

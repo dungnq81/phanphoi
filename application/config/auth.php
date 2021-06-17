@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined( 'BASEPATH' ) or exit( 'No direct script access allowed' );
 
 /*
  | -----------------------------------------------------
@@ -10,22 +10,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * identity login column
  */
-$config['unique_phone'] = TRUE;
+$config['unique_phone'] = true;
 
 /**
  * Allow users to be remembered and enable auto-login
  **/
-$config['remember_users'] = TRUE;
+$config['remember_users'] = true;
 
 /**
  * How long to remember the user (seconds)
  **/
-$config['remember_expire'] = 604800; // 7 ngày
+$config['remember_expire'] = 259200; // 3 ngày (3 * 86400)
 
 /**
  * Extend the users cookies everytime they auto-login
  **/
-$config['remember_extend_on_login'] = TRUE;
+$config['remember_extend_on_login'] = true;
 
 /**
  * Email Activation for registration

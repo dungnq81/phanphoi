@@ -9,7 +9,7 @@
 						<select name="id_postpr" class="form-control">
 							<option value="0">Tất cả</option>
 							<?php
-								if(base_url(uri_string())!=URL){
+								if(base_url(uri_string())!=URL && isset($id_post)){
 									$typepost_cus=$this->page_model->select_value_table_dk_col('post','id','="'.$id_post.'"','typepost');
 									if($typepost_cus=='danhmucsanpham'){ ?>
 										<option value="<?php echo $id_post; ?>" selected><?php echo $ten_post; ?></option>

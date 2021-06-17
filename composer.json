@@ -4,9 +4,10 @@
       "php": ">=7.3",
 	  "codeigniter/framework": "3.*",
       "paragonie/random_compat": "2.*",
-      "laminas/laminas-mail": "2.*",
       "laminas/laminas-escaper": "2.*",
       "google/recaptcha": "1.*",
-      "pyrocms/lex": "2.*"
+      "pyrocms/lex": "2.*",
+	  "phpmailer/phpmailer": "*",
+	  "league/oauth2-google": "*"
    }
 }

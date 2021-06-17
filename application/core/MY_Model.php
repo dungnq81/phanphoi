@@ -1,5 +1,5 @@
 <?php
-defined( 'BASEPATH' ) OR exit( 'No direct script access allowed' );
+defined( 'BASEPATH' ) or exit( 'No direct script access allowed' );
 
 /**
  * A base model to provide the basic CRUD actions for all models that inherit from it.
@@ -34,7 +34,7 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @var bool
 	 */
-	protected $skip_validation = FALSE;
+	protected $skip_validation = false;
 
 	/**
 	 * An array of validation rules
@@ -69,11 +69,9 @@ abstract class MY_Model extends CI_Model {
 	 * @throws Exception
 	 */
 	public function __call( $method, $arguments ) {
-		if ( is_callable( [ $this->db, $method ] ) )
-		{
+		if ( is_callable( [ $this->db, $method ] ) ) {
 			$result = call_user_func_array( [ $this->db, $method ], $arguments );
-			if ( is_object( $result ) && $result === $this->db )
-			{
+			if ( is_object( $result ) && $result === $this->db ) {
 				return $this;
 			}
 
@@ -90,7 +88,7 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @return string
 	 */
-	public function table_name( bool $prefix = TRUE ) {
+	public function table_name( bool $prefix = true ) {
 		return $prefix ? $this->db->dbprefix( $this->_table ) : $this->_table;
 	}
 
@@ -101,7 +99,7 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @return string
 	 */
-	public function set_table_name( $name = NULL ) {
+	public function set_table_name( $name = null ) {
 		return $this->_table = $name;
 	}
 
@@ -180,19 +178,18 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @return integer|bool The insert ID
 	 */
-	public function insert( $data, bool $skip_validation = FALSE, $escape = NULL ) {
-		if ( $skip_validation === FALSE )
-		{
-			if ( ! $this->_run_validation( $data ) )
-			{
-				return FALSE;
+	public function insert( $data, bool $skip_validation = false, $escape = null ) {
+		if ( $skip_validation === false ) {
+			if ( ! $this->_run_validation( $data ) ) {
+				return false;
 			}
 		}
 
 		$data = $this->_run_before_create( $data );
 		$this->db->insert( $this->_table, $data, $escape );
 
-		$this->skip_validation = FALSE;
+		$this->skip_validation = false;
+
 		return $this->db->insert_id();
 	}
 
@@ -208,15 +205,12 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @return array An array of insert IDs.
 	 */
-	public function insert_many( $data, bool $skip_validation = FALSE, $escape = NULL ) {
+	public function insert_many( $data, bool $skip_validation = false, $escape = null ) {
 		$ids = [];
-		foreach ( $data as $row )
-		{
-			if ( $skip_validation === FALSE )
-			{
-				if ( ! $this->_run_validation( $row ) )
-				{
-					$ids[] = FALSE;
+		foreach ( $data as $row ) {
+			if ( $skip_validation === false ) {
+				if ( ! $this->_run_validation( $row ) ) {
+					$ids[] = false;
 					continue;
 				}
 			}
@@ -224,7 +218,7 @@ abstract class MY_Model extends CI_Model {
 			$row = $this->_run_before_create( $row );
 			$this->db->insert( $this->_table, $row, $escape );
 
-			$this->skip_validation = FALSE;
+			$this->skip_validation = false;
 			$ids[]                 = $this->db->insert_id();
 		}
 
@@ -242,18 +236,17 @@ abstract class MY_Model extends CI_Model {
 	 * @author Jamie Rumbelow
 	 *
 	 */
-	public function update( $primary_value, $data, bool $skip_validation = FALSE ) {
-		if ( $skip_validation === FALSE )
-		{
-			if ( ! $this->_run_validation( $data ) )
-			{
-				return FALSE;
+	public function update( $primary_value, $data, bool $skip_validation = false ) {
+		if ( $skip_validation === false ) {
+			if ( ! $this->_run_validation( $data ) ) {
+				return false;
 			}
 		}
 
-		$this->skip_validation = FALSE;
+		$this->skip_validation = false;
 
-		$data = $this->_run_before_update($data);
+		$data = $this->_run_before_update( $data );
+
 		return $this->db->update( $this->_table, $data, [ $this->_primary_key => $primary_value ] );
 	}
 
@@ -276,14 +269,14 @@ abstract class MY_Model extends CI_Model {
 		$data = array_pop( $args );
 		$this->_set_where( $args );
 
-		if ( ! $this->_run_validation( $data ) )
-		{
-			return FALSE;
+		if ( ! $this->_run_validation( $data ) ) {
+			return false;
 		}
 
-		$this->skip_validation = FALSE;
+		$this->skip_validation = false;
 
-		$data = $this->_run_before_update($data);
+		$data = $this->_run_before_update( $data );
+
 		return $this->db->update( $this->_table, $data );
 	}
 
@@ -296,18 +289,17 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 * @return boolean
 	 */
-	public function update_many( $primary_values, $data, bool $skip_validation = FALSE ) {
-		if ( $skip_validation === FALSE )
-		{
-			if ( ! $this->_run_validation( $data ) )
-			{
-				return FALSE;
+	public function update_many( $primary_values, $data, bool $skip_validation = false ) {
+		if ( $skip_validation === false ) {
+			if ( ! $this->_run_validation( $data ) ) {
+				return false;
 			}
 		}
 
-		$this->skip_validation = FALSE;
+		$this->skip_validation = false;
 
-		$data = $this->_run_before_update($data);
+		$data = $this->_run_before_update( $data );
+
 		return $this->db
 			->where_in( $this->_primary_key, $primary_values )
 			->update( $this->_table, $data );
@@ -325,6 +317,7 @@ abstract class MY_Model extends CI_Model {
 
 		$data = [ $key => $value ];
 		$data = $this->_run_before_update( $data );
+
 		return $this->db->update( $this->_table, $data );
 	}
 
@@ -373,11 +366,9 @@ abstract class MY_Model extends CI_Model {
 	public function dropdown() {
 		$args = func_get_args();
 
-		if ( count( $args ) == 2 )
-		{
+		if ( count( $args ) == 2 ) {
 			list( $key, $value ) = $args;
-		} else
-		{
+		} else {
 			$key   = $this->_primary_key;
 			$value = $args[0];
 		}
@@ -387,9 +378,8 @@ abstract class MY_Model extends CI_Model {
 			->get( $this->_table );
 
 		$options = [];
-		foreach ( $query->result() as $row )
-		{
-			$options[$row->{$key}] = $row->{$value};
+		foreach ( $query->result() as $row ) {
+			$options[ $row->{$key} ] = $row->{$value};
 		}
 
 		return $options;
@@ -462,10 +452,8 @@ abstract class MY_Model extends CI_Model {
 	 */
 	public function fields() {
 		$keys = [];
-		if ( $this->validate )
-		{
-			foreach ( $this->validate as $key )
-			{
+		if ( $this->validate ) {
+			foreach ( $this->validate as $key ) {
 				$keys[] = $key['field'];
 			}
 		}
@@ -499,15 +487,13 @@ abstract class MY_Model extends CI_Model {
 	 */
 	public function safe_characters( $key ) {
 		// If enable query strings is set, then we need to replace any unsafe characters so that the code can still work
-		if ( $key != '' && $this->config->item( 'permitted_uri_chars' ) != '' && $this->config->item( 'enable_query_strings' ) == FALSE )
-		{
+		if ( $key != '' && $this->config->item( 'permitted_uri_chars' ) != '' && $this->config->item( 'enable_query_strings' ) == false ) {
 			// preg_quote() in PHP 5.3 escapes -, so the str_replace() and addition of - to preg_quote() is to maintain backwards
 			// compatibility as many are unaware of how characters in the permitted_uri_chars will be parsed as a regex pattern
 			if ( ! preg_match( "|^[" . str_replace( [
 					'\\-',
 					'\-'
-				], '-', preg_quote( $this->config->item( 'permitted_uri_chars' ), '-' ) ) . "]+$|i", $key ) )
-			{
+				], '-', preg_quote( $this->config->item( 'permitted_uri_chars' ), '-' ) ) . "]+$|i", $key ) ) {
 				return preg_replace( "/[^" . $this->config->item( 'permitted_uri_chars' ) . "]+/i", "-", $key );
 			}
 		}
@@ -525,13 +511,10 @@ abstract class MY_Model extends CI_Model {
 		$filtered_data = [];
 		$columns       = $this->db->list_fields( $table );
 
-		if ( is_array( $data ) )
-		{
-			foreach ( $columns as $column )
-			{
-				if ( array_key_exists( $column, $data ) )
-				{
-					$filtered_data[$column] = $data[$column];
+		if ( is_array( $data ) ) {
+			foreach ( $columns as $column ) {
+				if ( array_key_exists( $column, $data ) ) {
+					$filtered_data[ $column ] = $data[ $column ];
 				}
 			}
 		}
@@ -545,8 +528,7 @@ abstract class MY_Model extends CI_Model {
 	 * @author Jamie Rumbelow
 	 */
 	private function _fetch_table() {
-		if ( $this->_table == NULL )
-		{
+		if ( $this->_table == null ) {
 			$class        = preg_replace( '/(_m|_model|_class|_cl)?$/', '', get_class( $this ) );
 			$this->_table = plural( strtolower( $class ) );
 		}
@@ -561,11 +543,9 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 */
 	private function _set_where( $params ) {
-		if ( count( $params ) == 1 )
-		{
+		if ( count( $params ) == 1 ) {
 			$this->db->where( $params[0] );
-		} else
-		{
+		} else {
 			$this->db->where( $params[0], $params[1] );
 		}
 	}
@@ -576,17 +556,13 @@ abstract class MY_Model extends CI_Model {
 	 * @param array $params
 	 */
 	private function _set_limit( $params ) {
-		if ( count( $params ) == 1 )
-		{
-			if ( is_array( $params[0] ) )
-			{
+		if ( count( $params ) == 1 ) {
+			if ( is_array( $params[0] ) ) {
 				$this->db->limit( $params[0][0], $params[0][1] );
-			} else
-			{
+			} else {
 				$this->db->limit( $params[0] );
 			}
-		} else
-		{
+		} else {
 			$this->db->limit( (int) $params[0], (int) $params[1] );
 		}
 	}
@@ -601,8 +577,7 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 */
 	private function _run_before_create( $data ) {
-		foreach ( $this->before_create as $method )
-		{
+		foreach ( $this->before_create as $method ) {
 			$data = call_user_func_array( [ $this, $method ], [ $data ] );
 		}
 
@@ -615,8 +590,7 @@ abstract class MY_Model extends CI_Model {
 	 * @return false|mixed
 	 */
 	private function _run_before_update( $data ) {
-		foreach ( $this->before_update as $method )
-		{
+		foreach ( $this->before_update as $method ) {
 			$data = call_user_func_array( [ $this, $method ], [ $data ] );
 		}
 
@@ -634,31 +608,26 @@ abstract class MY_Model extends CI_Model {
 	 *
 	 */
 	private function _run_validation( $data ) {
-		if ( $this->skip_validation )
-		{
-			return TRUE;
+		if ( $this->skip_validation ) {
+			return true;
 		}
 
-		if ( empty( $this->validate ) )
-		{
-			return TRUE;
+		if ( empty( $this->validate ) ) {
+			return true;
 		}
 
 		$this->load->library( 'form_validation' );
 
 		// only set the model if it can be used for callbacks
-		if ( $class = get_class( $this ) AND $class !== 'MY_Model' )
-		{
+		if ( $class = get_class( $this ) and $class !== 'MY_Model' ) {
 			// make sure their MY_Form_validation is set up for it
-			if ( method_exists( $this->form_validation, 'set_model' ) )
-			{
+			if ( method_exists( $this->form_validation, 'set_model' ) ) {
 				$this->form_validation->set_model( $class );
 			}
 		}
 
 		$this->form_validation->set_data( $data );
-		if ( is_array( $this->validate ) )
-		{
+		if ( is_array( $this->validate ) ) {
 			$this->form_validation->set_rules( $this->validate );
 
 			return $this->form_validation->run();

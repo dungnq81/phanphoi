@@ -5,6 +5,25 @@
 	$.event.special.touchmove = { setup: function (_, ns, handle) { this.addEventListener('touchmove', handle, { passive: !ns.includes('noPreventDefault') }); } };
 	$(function () {
 
+		$(window).on("load", function () {
+			var _action = $.query.get('_action');
+			if(_action) {
+				pushState({}, document.title, window.location.href.split(/[?#]/)[0]);
+			}
+		});
+
+		/************************************/
+
+		/*attribute target="_blank" is not W3C compliant*/
+		var _blank = $('a._blank, a.blank, a[target="_blank"]');
+		_blank.removeAttr('target').attr('target', '_blank');
+		$.each(_blank, function (index, item) {
+			if (false === $(item)[0].hasAttribute('rel')) {
+				$(item).attr('rel', 'noopener noreferrer nofollow');
+			}
+		});
+
+		/************************************/
 		var rating_inner = $(".rating--inner");
 		var rating_data = rating_inner.data('id');
 

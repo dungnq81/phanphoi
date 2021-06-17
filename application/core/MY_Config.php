@@ -1,4 +1,4 @@
-<?php ( defined( 'BASEPATH' ) ) OR exit( 'No direct script access allowed' );
+<?php ( defined( 'BASEPATH' ) ) or exit( 'No direct script access allowed' );
 
 /**
  * Class MY_Config
@@ -12,12 +12,10 @@ class MY_Config extends CI_Config {
 	 * @param string $index
 	 */
 	public function set_item( $item, $value, $index = '' ) {
-		if ( $index == '' )
-		{
-			$this->config[$item] = $value;
-		} else
-		{
-			$this->config[$index][$item] = $value;
+		if ( $index == '' ) {
+			$this->config[ $item ] = $value;
+		} else {
+			$this->config[ $index ][ $item ] = $value;
 		}
 	}
 

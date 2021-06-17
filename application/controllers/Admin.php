@@ -11,6 +11,8 @@ class Admin extends MY_Controller {
 
 		parent::__construct();
 
+		$this->load->library( 'xulychuoi' );
+		$this->load->library( 'functions' );
 		$this->load->library( 'md5_system' );
 		$this->load->model( "admin_model" );
 		$this->load->library( "ajax_pagination" );

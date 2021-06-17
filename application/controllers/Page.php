@@ -13,6 +13,8 @@ class Page extends MY_Controller {
 
 		parent::__construct();
 
+		$this->load->library( 'xulychuoi' );
+		$this->load->library( 'functions' );
 		$this->load->library( 'Md5_system' );
 		$this->load->model( "page_model" );
 		$this->load->library( "Ajax_pagination" );
@@ -20,7 +22,6 @@ class Page extends MY_Controller {
 		$this->load->helper( 'form' );
 		$this->load->library( 'pagination' );
 		$this->load->library( "cart" );
-
 		$this->load->library( 'Phpmailer_lib' );
 		$this->perPage = 10;
 	}

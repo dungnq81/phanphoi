@@ -67,12 +67,11 @@
 	        },
 	        600:{
 	            items:3,
-	            margin:10,
+	            margin:15,
 	        },
 	        1000:{
 	            items:4,
-	            margin:10,
-	
+	            margin:20,
 	        }
 	    }
 	})

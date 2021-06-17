@@ -252,7 +252,7 @@
 						'typethanhvien':typethanhvien,
 					},
 					success: function(result){
-						console.log(result);
+						//console.log(result);
 						if(result!=0){
 							setTimeout(function() {
 									$("#error_email" ).empty().append('Email đã tồn tại!');
@@ -313,7 +313,7 @@
 						'typethanhvien':typethanhvien,
 					},
 					success: function(result){
-						console.log(result);
+						//console.log(result);
 						if(result!=0){
 							setTimeout(function() {
 									$("#error_mobile" ).empty().append('Số điện thoại đã tồn tại!');
@@ -456,7 +456,7 @@
 		var id_user		=$("input[name='id_user']").val();
 		var link_dr		=$("input[name='link_dr']").val();
 		var link_xuly	=$("input[name='link_xuly']").val();
-		console.log(day+month+year+gioitinh+honnhan+diachi+thanhpho+ten);
+		//console.log(day+month+year+gioitinh+honnhan+diachi+thanhpho+ten);
 		if(ten=='' || day=='' || month=='' || year=='' || gioitinh=='' || tinhtrang=='' || diachi=='' || thanhpho=='' || id_user =='' || link_dr=='' || link_xuly==''){
 			setTimeout(function() {
 					$("#error_update_infor" ).empty().append('Vui lòng nhập hết giá trị');
@@ -728,7 +728,7 @@
 									alert('Thêm sản phẩm vào giỏ hàng thành công !');
 									var cart_count_current=parseFloat($('#cart-header span').text());
 									cart_count_current=cart_count_current+parseFloat(number_pr_to_cart);
-									console.log(cart_count_current);
+									//console.log(cart_count_current);
 									$('#cart-header span').empty().text(cart_count_current);
 									$('input[name=number_pr_to_cart]').val('1');
 									//window.location.href=link_giohang;
@@ -899,7 +899,7 @@
 				success: function(data){		
 					$('.alert-checkout-button').empty().html('<i class="fa fa-spinner fa-spin"></i> Vui lòng đợi trong giây lát ...');		
 					setTimeout(function() {
-						console.log(data);
+						//console.log(data);
 						if(data=="0"){
 							alert('Xảy ra lỗi trong quá trình xử lý, vui lòng thử lại');
 						}else{
@@ -1188,7 +1188,7 @@
 					success: function(data){		
 						$('.wpcf7-response-output').empty().html('<i class="fa fa-spinner fa-spin"></i> Vui lòng đợi trong giây lát ...');	
 						setTimeout(function() {
-							console.log(data);
+							//console.log(data);
 							if(data=="0"){
 								alert('Xảy ra lỗi trong quá trình xử lý, vui lòng thử lại');
 							}else{
@@ -1235,16 +1235,16 @@
 	//---------------
 	$(document).on({
 	    "contextmenu": function(e) {
-	        console.log("ctx menu button:", e.which); 
+	        //console.log("ctx menu button:", e.which);
 
 	        // Stop the context menu
 	        //e.preventDefault();
 	    },
 	    "mousedown": function(e) { 
-	        console.log("normal mouse down:", e.which); 
+	        //console.log("normal mouse down:", e.which);
 	    },
 	    "mouseup": function(e) { 
-	        console.log("normal mouse up:", e.which); 
+	        //console.log("normal mouse up:", e.which);
 	    }
 	});
 })(jQuery);
