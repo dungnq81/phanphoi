@@ -1,28 +1,28 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined( 'BASEPATH' ) or exit( 'No direct script access allowed' );
 
 /*-------------*/
-define('URL','https://phanphoi.test/');
-define('URL_AD',URL.'admin/');
-define('PREFIX','hd_');
-define('IMG',URL.'assets/themes/img/');
-define('CSS',URL.'assets/themes/css/');
-define('CASS',URL.'assets/themes/sass/');
-define('JS',URL.'assets/themes/js/');
-define('IMG_AD',URL.'assets/admin/img/');
-define('CSS_AD',URL.'assets/admin/css/');
-define('JS_AD',URL.'assets/admin/js/');
-define('BC_AD',URL.'assets/admin/bower_components/');
-define('BULD_AD',URL.'assets/admin/buld/');
-define('DIST_AD',URL.'assets/admin/dist/');
-define('PLUGINS_AD',URL.'assets/admin/plugins/');
-define('THUMBS_URL',URL.'thumbs/small/');
-define('THUMBS_L_URL',URL.'thumbs/large/');
-define('UPLOAD_URL',URL.'upload/');
-define('UP_POST',URL.'upload/baiviet/');
-define('UP_POST_THUMB',URL.'upload/baiviet/thumb/');
-define('UP_POST_SM',URL.'upload/baiviet/small/');
-define('URL_POST',URL);
+const URL = 'http://kt.hdweb24h.com/phanphoi/';
+const URL_AD = URL . 'admin/';
+const PREFIX = 'hd_';
+const IMG = URL . 'assets/themes/img/';
+const CSS = URL . 'assets/themes/css/';
+const CASS = URL . 'assets/themes/sass/';
+const JS = URL . 'assets/themes/js/';
+const IMG_AD = URL . 'assets/admin/img/';
+const CSS_AD = URL . 'assets/admin/css/';
+const JS_AD = URL . 'assets/admin/js/';
+const BC_AD = URL . 'assets/admin/bower_components/';
+const BULD_AD = URL . 'assets/admin/buld/';
+const DIST_AD = URL . 'assets/admin/dist/';
+const PLUGINS_AD = URL . 'assets/admin/plugins/';
+const THUMBS_URL = URL . 'thumbs/small/';
+const THUMBS_L_URL = URL . 'thumbs/large/';
+const UPLOAD_URL = URL . 'upload/';
+const UP_POST = URL . 'upload/baiviet/';
+const UP_POST_THUMB = URL . 'upload/baiviet/thumb/';
+const UP_POST_SM = URL . 'upload/baiviet/small/';
+const URL_POST = URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ define('URL_POST',URL);
 | of this setting
 |
 */
-defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
+defined( 'SHOW_DEBUG_BACKTRACE' ) or define( 'SHOW_DEBUG_BACKTRACE', true );
 
 /*
 |--------------------------------------------------------------------------
@@ -49,10 +49,10 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 | always be used to set the mode correctly.
 |
 */
-defined('FILE_READ_MODE')  OR define('FILE_READ_MODE', 0644);
-defined('FILE_WRITE_MODE') OR define('FILE_WRITE_MODE', 0666);
-defined('DIR_READ_MODE')   OR define('DIR_READ_MODE', 0755);
-defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
+defined( 'FILE_READ_MODE' ) or define( 'FILE_READ_MODE', 0644 );
+defined( 'FILE_WRITE_MODE' ) or define( 'FILE_WRITE_MODE', 0666 );
+defined( 'DIR_READ_MODE' ) or define( 'DIR_READ_MODE', 0755 );
+defined( 'DIR_WRITE_MODE' ) or define( 'DIR_WRITE_MODE', 0755 );
 
 /*
 |--------------------------------------------------------------------------
@@ -62,14 +62,14 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 | These modes are used when working with fopen()/popen()
 |
 */
-defined('FOPEN_READ')                           OR define('FOPEN_READ', 'rb');
-defined('FOPEN_READ_WRITE')                     OR define('FOPEN_READ_WRITE', 'r+b');
-defined('FOPEN_WRITE_CREATE_DESTRUCTIVE')       OR define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb'); // truncates existing file data, use with care
-defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE')  OR define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
-defined('FOPEN_WRITE_CREATE')                   OR define('FOPEN_WRITE_CREATE', 'ab');
-defined('FOPEN_READ_WRITE_CREATE')              OR define('FOPEN_READ_WRITE_CREATE', 'a+b');
-defined('FOPEN_WRITE_CREATE_STRICT')            OR define('FOPEN_WRITE_CREATE_STRICT', 'xb');
-defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
+defined( 'FOPEN_READ' ) or define( 'FOPEN_READ', 'rb' );
+defined( 'FOPEN_READ_WRITE' ) or define( 'FOPEN_READ_WRITE', 'r+b' );
+defined( 'FOPEN_WRITE_CREATE_DESTRUCTIVE' ) or define( 'FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb' ); // truncates existing file data, use with care
+defined( 'FOPEN_READ_WRITE_CREATE_DESTRUCTIVE' ) or define( 'FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b' ); // truncates existing file data, use with care
+defined( 'FOPEN_WRITE_CREATE' ) or define( 'FOPEN_WRITE_CREATE', 'ab' );
+defined( 'FOPEN_READ_WRITE_CREATE' ) or define( 'FOPEN_READ_WRITE_CREATE', 'a+b' );
+defined( 'FOPEN_WRITE_CREATE_STRICT' ) or define( 'FOPEN_WRITE_CREATE_STRICT', 'xb' );
+defined( 'FOPEN_READ_WRITE_CREATE_STRICT' ) or define( 'FOPEN_READ_WRITE_CREATE_STRICT', 'x+b' );
 
 /*
 |--------------------------------------------------------------------------
@@ -96,13 +96,13 @@ defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREA
 |       http://tldp.org/LDP/abs/html/exitcodes.html
 |
 */
-defined('EXIT_SUCCESS')        OR define('EXIT_SUCCESS', 0); // no errors
-defined('EXIT_ERROR')          OR define('EXIT_ERROR', 1); // generic error
-defined('EXIT_CONFIG')         OR define('EXIT_CONFIG', 3); // configuration error
-defined('EXIT_UNKNOWN_FILE')   OR define('EXIT_UNKNOWN_FILE', 4); // file not found
-defined('EXIT_UNKNOWN_CLASS')  OR define('EXIT_UNKNOWN_CLASS', 5); // unknown class
-defined('EXIT_UNKNOWN_METHOD') OR define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
-defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user input
-defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
-defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
-defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+defined( 'EXIT_SUCCESS' ) or define( 'EXIT_SUCCESS', 0 ); // no errors
+defined( 'EXIT_ERROR' ) or define( 'EXIT_ERROR', 1 ); // generic error
+defined( 'EXIT_CONFIG' ) or define( 'EXIT_CONFIG', 3 ); // configuration error
+defined( 'EXIT_UNKNOWN_FILE' ) or define( 'EXIT_UNKNOWN_FILE', 4 ); // file not found
+defined( 'EXIT_UNKNOWN_CLASS' ) or define( 'EXIT_UNKNOWN_CLASS', 5 ); // unknown class
+defined( 'EXIT_UNKNOWN_METHOD' ) or define( 'EXIT_UNKNOWN_METHOD', 6 ); // unknown class member
+defined( 'EXIT_USER_INPUT' ) or define( 'EXIT_USER_INPUT', 7 ); // invalid user input
+defined( 'EXIT_DATABASE' ) or define( 'EXIT_DATABASE', 8 ); // database error
+defined( 'EXIT__AUTO_MIN' ) or define( 'EXIT__AUTO_MIN', 9 ); // lowest automatically-assigned error code
+defined( 'EXIT__AUTO_MAX' ) or define( 'EXIT__AUTO_MAX', 125 ); // highest automatically-assigned error code

@@ -4,7 +4,7 @@
 		<div id="logo_main" class="header-content">
 			<div class="container no-padding">
 				<div class="header-col col-lg-1 col-md-1 col-xs-2 header-logo no-padding">
-					<div class="logo"><a href="<?php echo base_url(); ?>"><img loading="lazy" src="<?php echo @$logo; ?>" alt="Logo"/></a></div>
+					<div class="logo"><a href="<?php echo base_url(); ?>"><img loading="lazy" src="<?php echo @$logo; ?>" alt="Logo" /></a></div>
 				</div>
 				<div class="header-col col-lg-3 col-md-3 col-xs-8 header-register no-padding">
 					<div class="box-name">
@@ -19,8 +19,8 @@
 							<div class="header-top-right">
 								<?php if ( ! $this->current_user ) : ?>
 								<ul class="users-box">
-									<li><a href="/users/login" data-target="#user-login" data-toggle="modal" data-backdrop="static" data-keyboard="false" title="<?php echo esc_attr_( 'index_heading' ) ?>"><?php echo __( 'index_heading' ) ?></a></li>
-									<li><a href="/users/register" title="<?php echo esc_attr_( 'create_user_heading' ) ?>"><?php echo __( 'index_create_user_link' ) ?></a></li>
+									<li><a href="<?=base_url()?>users/login<?=redirect_get( current_url() )?>" data-target="#user-login" data-toggle="modal" data-backdrop="static" data-keyboard="false" title="<?php echo esc_attr_( 'login_heading' ) ?>"><?php echo __( 'login_heading' ) ?></a></li>
+									<li><a href="<?=base_url()?>users/register<?=redirect_get( current_url() )?>" title="<?php echo esc_attr_( 'create_user_heading' ) ?>"><?php echo __( 'index_create_user_link' ) ?></a></li>
 								</ul>
 								<div class="modal-wrapper">
 									<div id="user-login" class="modal fade modal-login" tabindex="-1" role="dialog">
@@ -29,35 +29,43 @@
 										</div>
 									</div>
 								</div>
-								<?php else : ?>
+								<?php else :
+									$display_name =  display_name( $this->current_user );
+								?>
 								<ul class="users-box logged">
 									<li class="profile dropdown">
 										<a class="avatar" href="#" data-toggle="dropdown">
-											<span class="avatar-inner">D</span>
-											<span class="user-name">Dũng Ngô</span>
+											<span class="avatar-inner"><?php echo $display_name[0]?></span>
+											<span class="user-name"><?php echo $display_name?></span>
 										</a>
 										<ul class="dropdown-menu user_status" role="menu" aria-labelledby="profile">
 											<li class="account">
-												<span class="avatar-inner">D</span>
-												<span class="user-name">Dũng Ngô</span>
+												<span class="avatar-inner"><?php echo $display_name[0]?></span>
+												<span class="user-name"><?php echo $display_name?></span>
 											</li>
-											<li><a href="#">Đơn hàng của tôi</a></li>
-											<li><a href="#">Tài khoản của tôi</a></li>
+											<li><a href="<?=base_url()?>users/order">Đơn hàng của tôi</a></li>
+											<li><a href="<?=base_url()?>users/profile">Tài khoản của tôi</a></li>
 											<li class="points">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M13,16.915V18h-2v-1.08 C8.661,16.553,8,14.918,8,14h2c0.011,0.143,0.159,1,2,1c1.38,0,2-0.585,2-1c0-0.324,0-1-2-1c-3.48,0-4-1.88-4-3 c0-1.288,1.029-2.584,3-2.915V6.012h2v1.109c1.734,0.41,2.4,1.853,2.4,2.879h-1l-1,0.018C13.386,9.638,13.185,9,12,9 c-1.299,0-2,0.516-2,1c0,0.374,0,1,2,1c3.48,0,4,1.88,4,3C16,15.288,14.971,16.584,13,16.915z"></path></svg>
 												<span class="content">
 													<span>Thông tin điểm thưởng</span>
-													<span>Bạn đang có <b>234</b> điểm</span>
+													<span>Bạn có <b><?php echo number_format($this->current_user->points)?></b> điểm</span>
 												</span>
 											</li>
 											<li>
-												<a href="/users/logout" class="logout_link">
+												<a href="<?=base_url()?>users/logout<?=redirect_get( current_url() )?>" class="logout_link">
 													Thoát tài khoản
 													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M2 12L7 16 7 13 16 13 16 11 7 11 7 8z"></path><path d="M13.001,2.999c-2.405,0-4.665,0.937-6.364,2.637L8.051,7.05c1.322-1.322,3.08-2.051,4.95-2.051s3.628,0.729,4.95,2.051 s2.051,3.08,2.051,4.95s-0.729,3.628-2.051,4.95s-3.08,2.051-4.95,2.051s-3.628-0.729-4.95-2.051l-1.414,1.414 c1.699,1.7,3.959,2.637,6.364,2.637s4.665-0.937,6.364-2.637c1.7-1.699,2.637-3.959,2.637-6.364s-0.937-4.665-2.637-6.364 C17.666,3.936,15.406,2.999,13.001,2.999z"></path></svg>
 												</a>
 											</li>
 										</ul>
 									</li>
+									<?php
+									$messages = $this->db->where('status', 1)
+														 ->order_by('created_at', 'DESC')
+														 ->get('hd_messages', 6, 0)
+														 ->result();
+									?>
 									<li class="notification dropdown active">
 										<a href="#" data-toggle="dropdown">
 											<svg id="Bell" viewBox="0 0 32 32">
@@ -65,26 +73,29 @@
 												<path d="M12 26c0 2.209 1.791 4 4 4s4-1.791 4-4h-8z"></path>
 											</svg>
 										</a>
+										<?php if ($messages) : ?>
 										<ul class="notify-box dropdown-menu" aria-labelledby="notification">
-											<li>
-												<a href="#" data-id="1033189714">
-													<strong>Nữ giúp việc đánh bé gái hơn một tháng tuổi bị bắt</strong>
+											<?php foreach ($messages as $message) :
+												$_check = $this->db->where( 'users_id', $this->current_user->id)
+																   ->where( 'messages_id', $message->id )
+																   ->get( 'hd_users_messages', 1);
+
+												$_class = '';
+												if ( $_check->num_rows() < 1 )
+													$_class = ' class="unread"';
+												?>
+											<li<?=$_class?>>
+												<a target="_blank" title="<?=escape_html_attr($message->title)?>" href="<?=$message->url?>" data-message="<?=$message->id?>" data-user="<?=$this->current_user->id?>">
+													<strong><?=$message->title?></strong>
 													<span class="time">
 														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill:rgba(51, 51, 51, 1);"><path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10c5.514,0,10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8 s3.589-8,8-8s8,3.589,8,8S16.411,20,12,20z"></path><path d="M13 7L11 7 11 13 17 13 17 11 13 11z"></path></svg>
-														 11:17 24/11/2017
+														<?php echo date( 'H:i d/m/Y', $message->updated_at )?>
 													</span>
 												</a>
 											</li>
-											<li class="unread">
-												<a href="#" data-id="1033189714">
-													<strong>Nữ giúp việc đánh bé gái hơn một tháng tuổi bị bắt</strong>
-													<span class="time">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill:rgba(51, 51, 51, 1);"><path d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10c5.514,0,10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8 s3.589-8,8-8s8,3.589,8,8S16.411,20,12,20z"></path><path d="M13 7L11 7 11 13 17 13 17 11 13 11z"></path></svg>
-														 11:17 24/11/2017
-													</span>
-												</a>
-											</li>
+											<?php endforeach;?>
 										</ul>
+										<?php endif;?>
 									</li>
 								</ul>
 								<?php endif;?>

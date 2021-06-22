@@ -145,95 +145,55 @@
 				var setting_ip_value=$(setting_ip_name).val();
 
 				if(setting_ip_value==null){
-
 					setting_ip_name="textarea[name='setting_"+i+"']";
-
 					setting_ip_value=$(setting_ip_name).val();
-
 					// alert(setting_ip_value);
-
 				}if(setting_ip_value==null){
-
 					setting_ip_name="select[name='setting_"+i+"']";
-
 					setting_ip_value=$(setting_ip_name).val();
-
 					// alert(setting_ip_value);
-
 				}
+				$.ajax({
+					type: 'POST',
+					url: BASE_URL  + 'admin/update_setting',
+					data: {
+						number_col: count_div,
+						setting_ip_col: setting_ip_col,
+						setting_ip_value: setting_ip_value,
+						id_option: i,
+					},
+					beforeSend: function() {
 
-					$.ajax({
+						//console.log(BASE_URL  + 'admin/update_setting');
 
-						type:'POST',
-
-						url:'update_setting',
-
-						data:{
-
-							'number_col':count_div,
-
-							'setting_ip_col':setting_ip_col,
-
-							'setting_ip_value':setting_ip_value,
-
-							'id_option':i,
-
-						},
-
-						success: function(result){
-
-							setTimeout(function() {
-
-								$("#result_setting_alert" ).empty().append('Cập nhật thành công !');
-
-							},1000);
-
-							$("#result_setting_alert").addClass('alert_ad');
-
-							$("#result_setting_alert" ).empty().append('Đang xử lý ... <i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>');
-
-						}
-
-					});
-
+						$("#result_setting_alert").addClass('alert_ad');
+						$("#result_setting_alert" ).empty().append('Đang xử lý ... <i class="fa fa-refresh fa-spin fa-1x fa-fw"></i>');
+					},
+					success: function(result){
+						setTimeout(function() {
+							$("#result_setting_alert" ).empty().append('Cập nhật thành công !');
+						}, 1000);
+					}
+				});
 			}
-
 		});
-
 	});
 
 	$(document).ready(function() {
-
 		$('#btn_capnhat_infor_ad').click(function(){
-
 			$("#result_capnhat_infor_ad_alert").removeClass('alert_ad');
-
 			$("#result_capnhat_infor_ad_alert" ).empty();
-
 			var hoten=$("input[name='hoten']").val();
-
 			var sodienthoai=$("input[name='sodienthoai']").val();
-
 			var gioitinh=$("select[name='gioitinh']").val();
-
 			var ngaysinh=$("input[name='ngaysinh']").val();
-
 			var match= ["image/gif","image/png","image/jpg","image/jpeg"];
-
 			var anhdaidien_post_value=$("input[type=file]").val();
-
 			if(anhdaidien_post_value!=''){
-
 				var anhdaidien_post_name=$("input[type=file]").val().split('\\').pop();
-
 				var anhdaidien_post=$("input[type=file]").prop('files')[0];
-
 				var type_anhdaidien_post = anhdaidien_post.type;
-
-				if(type_anhdaidien_post == match[0] || type_anhdaidien_post == match[1] || type_anhdaidien_post == match[2]|| type_anhdaidien_post == match[3])
-
-				{
-
+				if(type_anhdaidien_post == match[0] || type_anhdaidien_post == match[1] || type_anhdaidien_post == match[2]|| type_anhdaidien_post == match[3]) {
 					// var type_anhdaidien_post = anhdaidien_post.type;
 
 					var form_data = new FormData();
@@ -246,7 +206,7 @@
 
 					  $.ajax({
 
-							url: 'update_post', 
+							url: 'update_post',
 
 							dataType: 'text',
 

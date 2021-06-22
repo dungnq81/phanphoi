@@ -210,7 +210,19 @@
 				</ul>
 
 			</li>
-
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-book"></i>
+					<span>Thông báo</span>
+					<span class="pull-right-container">
+					  <span class="label label-primary pull-right"><?php echo $this->db->get('hd_messages')->num_rows(); ?></span>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li><a href="<?php echo URL_AD.'post?post_type=message'?>"><i class="fa fa-circle-o"></i> Tất cả</a></li>
+					<li><a href="<?php echo URL_AD.'post_new?post_type=message'?>"><i class="fa fa-circle-o"></i> Thêm thông báo mới</a></li>
+				</ul>
+			</li>
 			<li class="treeview">
 
 				<a href="#">
@@ -300,85 +312,54 @@
 			</li>
 
 			<li class="treeview">
-
 				<a href="#">
-
 					<i class="fa fa-users"></i>
-
-					<span>Thành viên</span>
-
+					<span>Thành viên quản trị</span>
 					<span class="pull-right-container">
-
 					  <span class="label label-primary pull-right">2</span>
-
 					</span>
-
 				</a>
-
 				<ul class="treeview-menu">
-
-					<li><a href="<?php echo URL_AD.'member'?>"><i class="fa fa-circle-o"></i> Tất cả thành viên</a></li>
-
+					<li><a href="<?php echo URL_AD.'member'?>"><i class="fa fa-circle-o"></i> Tất cả</a></li>
 					<li><a href="<?php echo URL_AD.'add_member'?>"><i class="fa fa-circle-o"></i> Thêm thành viên</a></li>
-
 				</ul>
-
 			</li>
-
+			<li>
+				<a href="<?php echo URL_AD.'users'?>">
+					<i class="fa fa-users"></i>
+					<span>Thành viên đăng ký</span>
+					<span class="pull-right-container">
+					  <span class="label label-primary pull-right"><?php echo $this->db->get('hd_users')->num_rows(); ?></span>
+					</span>
+				</a>
+			</li>
 			<li><a href="<?php echo (URL.'logout')?>"><i class="fa fa-book"></i> <span>Đăng xuất</span></a></li>
-
 		</ul>
-
 		<?php } else if($typethanhvien=='tuyensinh'){?>
-
 			<ul class="sidebar-menu" data-widget="tree">
-
 				<li class="active">
-
 					<a href="<?php echo URL_AD; ?>">
-
 						<i class="fa fa-dashboard"></i> <span>Bảng tin</span>
-
 					</a>
-
 				</li>
-
 				<li class="treeview">
-
 					<a href="#">
-
 						<i class="fa fa-windows"></i>
-
 						<span>Slider</span>
-
 						<span class="pull-right-container">
-
 							<span class="label label-primary pull-right">3</span>
-
 						</span>
-
 					</a>
-
 					<ul class="treeview-menu">
-
 						<li><a href="<?php echo URL_AD.'post?post_type=slider'?>"><i class="fa fa-circle-o"></i> Tất cả slider</a></li>
-
 						<li><a href="<?php echo URL_AD.'post_new?post_type=slider'?>"><i class="fa fa-circle-o"></i> Thêm slider mới</a></li>
-
 						<li><a href="<?php echo URL_AD.'post?post_type=slider_cat'?>"><i class="fa fa-circle-o"></i> Chuyên mục slider</a></li>
-
 					</ul>
-
 				</li>
-
 				<li class="treeview">
-
 					<a href="#">
-
 						<i class="fa fa-files-o"></i>
-
 						<span>Bài viết</span>
-
 						<span class="pull-right-container">
 
 						  <span class="label label-primary pull-right">3</span>

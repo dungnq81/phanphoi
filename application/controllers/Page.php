@@ -520,62 +520,12 @@ class Page extends MY_Controller {
 	 * @return bool
 	 * @throws \PHPMailer\PHPMailer\Exception
 	 */
-	public function send_mail_user2( $subject, $content, $to, $reply, $cc = null, $bcc = null ) {
+	public function send_mail_user2( $subject, $content, $to, $reply=null, $cc = null, $bcc = null ) {
 		if ( empty( $to ) ) {
 			return false;
 		}
 
-		// PHPMailer object
-		$mail = $this->phpmailer_lib->load();
-
-		$mail->Subject = $subject;
-		$mail->MsgHTML( $content );
-
-		// reply to
-		if ( ! empty( $reply ) ) {
-			$mail->AddReplyTo( $reply, "" );
-		}
-
-		// to
-		if ( is_string( $to ) ) {
-			$to = explode( ',', $to );
-		}
-		foreach ( $to as $_to ) {
-			if ( ! empty( $_to ) ) {
-				$mail->AddAddress( $_to, "" );
-			}
-		}
-
-		// cc
-		if ( ! empty( $cc ) ) {
-			if ( is_string( $cc ) ) {
-				$cc = explode( ',', $cc );
-			}
-			foreach ( $cc as $_cc ) {
-				if ( ! empty( $_cc ) ) {
-					$mail->AddCC( $_cc, "" );
-				}
-			}
-		}
-
-		// bcc
-		if ( ! empty( $bcc ) ) {
-			if ( is_string( $bcc ) ) {
-				$bcc = explode( ',', $bcc );
-			}
-			foreach ( $bcc as $_bcc ) {
-				if ( ! empty( $_bcc ) ) {
-					$mail->AddBCC( $_bcc, "" );
-				}
-			}
-		}
-
-		//send the message,
-		if ( ! $mail->Send() ) {
-			return false;
-		}
-
-		return true;
+		return $this->phpmailer_lib->send_mail($to, $subject, $content, $reply, $cc, $bcc );
 	}
 
 	public function insert_lienhe() {
@@ -693,33 +643,92 @@ class Page extends MY_Controller {
 		}
 	}
 
+	/**
+	 * @throws \PHPMailer\PHPMailer\Exception
+	 */
 	public function insert_donhang() {
-		$tt_khachhang    = $_POST['tt_khachhang'];
-		$vl_khachhang    = $_POST['vl_khachhang'];
+
+		$user_id = $this->input->post( 'user_id' );
+		$email = $this->input->post( 'email' );
+		$totals = base64_decode($this->input->post('totals'));
+		$points = base64_decode($this->input->post('pointsx'));
+
+		$tt_khachhang = $_POST['tt_khachhang'];
+		$vl_khachhang = $_POST['vl_khachhang'];
 		$ngaytao         = date( 'Y-m-d H:i:s' );
 		$tt_khachhang    = implode( "*+++*", $tt_khachhang );
 		$vl_khachhang    = implode( "*+++*", $vl_khachhang );
-		$tt_sanpham      = $_POST['tt_sanpham'];
-		$type_thanhtoan  = $_POST['type_thanhtoan'];
+		$tt_sanpham      = $this->input->post('tt_sanpham');
+		$type_thanhtoan  = $this->input->post('type_thanhtoan');
 		$id_donhang      = date( 'YmdHis' );
-		$sql             = " INSERT INTO " . $this->prefix . "donhang(id_donhang,tt_khachhang,vl_khachhang,tt_sanpham,ngaytao,ngaycapnhat,type_thanhtoan,trangthai)
-			VALUES ('" . $id_donhang . "','" . $tt_khachhang . "','" . $vl_khachhang . "','" . $tt_sanpham . "','" . $ngaytao . "','" . $ngaytao . "','" . $type_thanhtoan . "', 0)";
-		$query           = $this->db->query( $sql );
+
+		$_data = [
+			'users_id' => $user_id,
+			'tt_khachhang' => $tt_khachhang,
+			'vl_khachhang' => $vl_khachhang,
+			'tt_sanpham' => $tt_sanpham,
+			'ngaytao' => $ngaytao,
+			'ngaycapnhat' => $ngaytao,
+			'type_thanhtoan' => $type_thanhtoan,
+			'id_donhang' => $id_donhang,
+			'created_at' => now(),
+			'updated_at' => now(),
+		];
+
+		// kiểm tra điểm thưởng
+		$_point_user_id = $this->session->userdata( 'point_user_id' );
+		$_points_se = $this->session->userdata( 'points' );
+		$_order_totals = $this->session->userdata( 'order_totals' );
+		if ($_point_user_id == $this->current_user->id && $points == $_points_se && $totals == $_order_totals)
+		{
+			$_data['points'] = $points;
+			$_data['totals'] = $totals;
+		}
+
+		$this->db->insert( 'hd_donhang', $_data );
 		$id_sanpham_mail = $this->db->insert_id();
-		if ( $query ) {
-			$blogname = $this->page_model->select_value_table_dk_col( 'option', 'name', '="blogname"', 'value' );
+		if ($id_sanpham_mail) {
+
+			// tính điểm
+			if ($_point_user_id == $this->current_user->id && $points == $_points_se && $totals == $_order_totals)
+			{
+				$current_points = (int) $this->current_user->points;
+				$current_points = $current_points - $points;
+
+				$_money_to_point = (int) $this->setting->money_to_point;
+				$_points = round($totals / $_money_to_point, 0);
+				$current_points = (int)$_points + $current_points;
+
+				// update points
+				$_data = [
+					'points_tmp' => $_points,
+					'points' => $current_points,
+				];
+				$this->db->update( 'hd_users', $_data, [ 'id' => $user_id ] );
+			}
+
 			$this->cart->destroy();
-			$ten_mail        = strtoupper( $blogname ) . ' - HỆ THỐNG VỪA NHẬN ĐƯỢC MỘT ĐƠN HÀNG - MÃ: ' . $id_donhang;
-			$email_to        = $this->page_model->select_value_table_dk_col( 'option', 'name', '="email1"', 'value' );
+			$this->session->unset_userdata( [
+				'points',
+				'point_user_id',
+				'order_totals',
+			] );
+
+			$ten_mail = strtoupper( $this->setting->blogname ) . ' - Một đơn hàng được đặt - MÃ: ' . $id_donhang;
+			$email_to =  $this->setting->email1;
 			$content_mail_rs = '<p>Chi tiết xem tại: ' . base_url() . 'admin/view_donhang?id=' . $id_sanpham_mail . ' (Vui lòng đăng nhập quản trị để xem)</p>';
-			$this->send_mail_user( $email_to, $ten_mail, $content_mail_rs );
+
+			$this->send_mail_user2( $ten_mail, $content_mail_rs, $email_to, $email );
 			echo base_url() . 'chi-tiet-don-hang/?id_donhang=' . $id_donhang;
-		} else {
+		}
+		else {
 			echo '0';
 		}
-		//var_dump(unserialize(base64_decode($tt_sanpham))); // get value sp
 	}
 
+	/**
+	 * sendmail_tragop
+	 */
 	public function sendmail_tragop() {
 		$hoten           = $_POST['hoten'];
 		$sodienthoai     = $_POST['sodienthoai'];

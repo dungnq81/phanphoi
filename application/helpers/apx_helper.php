@@ -1516,6 +1516,33 @@ if ( ! function_exists( 'esc__' ) ) {
 
 // ------------------------------------------------------------------------
 
+if ( ! function_exists( 'display_name' ) ) {
+	/**
+	 * @param $user
+	 *
+	 * @return mixed
+	 */
+	function display_name( $user ) {
+		return $user->fullname ?: $user->phone ?: $user->email;
+	}
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists( 'redirect_get' ) ) {
+	/**
+	 * @param string $url
+	 * @param string $redirect
+	 *
+	 * @return string
+	 */
+	function redirect_get( $url = '/', $redirect = 'redirect_to' ) {
+		return '?' . $redirect . '=' . urlencode( $url );
+	}
+}
+
+// ------------------------------------------------------------------------
+
 if ( ! function_exists( 'esc_attr_' ) ) {
 	/**
 	 * @param string $line
@@ -1666,6 +1693,7 @@ if ( ! function_exists( 'get_asset_css' ) ) {
 		}
 
 		Asset::css( $sheet, $sheet_min, $group );
+
 		return Asset::render_css( $group );
 	}
 }
@@ -1676,7 +1704,7 @@ if ( ! function_exists( 'get_asset_css' ) ) {
  * @return bool
  */
 function __return_true() {
-	return TRUE;
+	return true;
 }
 
 // -------------------------------------------------------------
@@ -1685,7 +1713,7 @@ function __return_true() {
  * @return bool
  */
 function __return_false() {
-	return FALSE;
+	return false;
 }
 
 // -------------------------------------------------------------
@@ -1712,7 +1740,7 @@ function __return_empty_array() {
  * @return null
  */
 function __return_null() {
-	return NULL;
+	return null;
 }
 
 // -------------------------------------------------------------

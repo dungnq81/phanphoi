@@ -58,6 +58,8 @@ $route['admin'] = 'admin';
 $route['login'] = 'admin/login';
 $route['logout'] = 'admin/logout';
 $route['export_sp'] = 'admin/export_sp';
+//$route['admin/(:any)'] = 'admin/$1';
+//$route['admin/(:any)(:num)'] = 'admin/$1/$2';
 //--------------------------------
 $route['dang-ky'] = 'page/dangky';
 $route['dang-ky/gia-su'] = 'page/dangkygiasu';

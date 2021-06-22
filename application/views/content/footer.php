@@ -93,8 +93,6 @@
 	$(function () {
 		$('.timepicker').timepicker();
 	});
-
-
 	$('.list-dmsp-home').owlCarousel({
 	    loop:true,
 	    margin:0, 

@@ -2,7 +2,7 @@
 
 	$col_bt='col-md-12';
 
-	if($post_type!='post' and $post_type!='page'  and $post_type!='sanpham' and $post_type!='widget' and $post_type!='slider' and $post_type!='lienhe'){
+	if($post_type!='message' && $post_type!='post' and $post_type!='page'  and $post_type!='sanpham' and $post_type!='widget' and $post_type!='slider' and $post_type!='lienhe'){
 
 		$col_bt='col-md-8';
 
@@ -40,7 +40,7 @@
 
 			<?php 
 
-				if($post_type!='post' and $post_type!='page' and $post_type!='sanpham' and $post_type!='widget' and $post_type!='slider' and $post_type!='lienhe'){
+				if($post_type!='message' && $post_type!='post' and $post_type!='page' and $post_type!='sanpham' and $post_type!='widget' and $post_type!='slider' and $post_type!='lienhe'){
 
 					echo '<div class="col-md-4">';
 
@@ -208,23 +208,29 @@
 
 							<th>Tiêu đề</th>
 
-							<?php 
+							<?php
 
-								if($post_type=='thuoctinhsanpham'){
+							if($post_type=='thuoctinhsanpham'){
 
-									echo '<th>Loại</th>';
+								echo '<th>Loại</th>';
 
-								}else{
+							} elseif ($post_type=='message') {echo NULL;}
+							else if($post_type =='page') {echo NULL; }
+							else{
 
-									echo '<th>Chuyên mục</th>';
+								echo '<th>Chuyên mục</th>';
 
-								}
+							}
 
 							?>
 
 							<th>Ngày đăng</th>
 
-							<th>Ngày cập nhật</th>
+							<?php if ($post_type=='message') : ?>
+								<th>URL</th>
+							<?php else: ?>
+								<th>Ngày cập nhật</th>
+							<?php endif;?>
 
 							<th>Trạng thái</th>
 
@@ -379,9 +385,9 @@
 									<th><input type="checkbox" class="cb_post" value="<?php echo $id;?>"></th>
 
 									<td><?php echo $tieude; ?></td>
-
+									<?php if($post_type != 'page' && $post_type != 'message') : ?>
 									<td class="cm_post"><?php echo $ten_chuyenmuc_rs; ?></td>
-
+									<?php endif;?>
 									<td><?php echo $ngaydang; ?></td>
 
 									<td><?php echo $ngaycapnhat; ?></td>
@@ -472,24 +478,28 @@
 
 							<th>Tiêu đề</th>
 
-							<?php 
+							<?php
 
-								if($post_type=='thuoctinhsanpham'){
+							if($post_type=='thuoctinhsanpham'){
 
-									echo '<th>Loại</th>';
+								echo '<th>Loại</th>';
 
-								}else{
+							} elseif ($post_type=='message') {echo NULL;}
+							else if($post_type =='page') {echo NULL; }
+							else{
 
-									echo '<th>Chuyên mục</th>';
+								echo '<th>Chuyên mục</th>';
 
-								}
+							}
 
 							?>
 
 							<th>Ngày đăng</th>
-
+							<?php if ($post_type=='message') : ?>
+								<th>URL</th>
+							<?php else: ?>
 							<th>Ngày cập nhật</th>
-
+							<?php endif;?>
 							<th>Trạng thái</th>
 
 							<th>Thao tác</th>

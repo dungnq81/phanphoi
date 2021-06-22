@@ -13,13 +13,16 @@ class Admin extends MY_Controller {
 
 		$this->load->library( 'xulychuoi' );
 		$this->load->library( 'functions' );
-		$this->load->library( 'md5_system' );
+		$this->load->library( 'Md5_system' );
 		$this->load->model( "admin_model" );
-		$this->load->library( "ajax_pagination" );
-		$this->load->library( "pagination" );
+		$this->load->library( "Ajax_pagination" );
+		$this->load->library( 'email' );
+		$this->load->helper( 'form' );
+		$this->load->library( 'pagination' );
+		$this->load->library( "cart" );
+		$this->load->library( 'Phpmailer_lib' );
 
 		$this->perPage = $this->admin_model->select_value_table_dk_col( 'option', 'name', '="phantrang"', 'value' );
-
 	}
 
 
@@ -150,7 +153,7 @@ class Admin extends MY_Controller {
 		$this->session->unset_userdata( 'user_admin' );
 
 		redirect( URL . 'login' );
-		
+
 	}
 
 	public function media() {
@@ -158,7 +161,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -193,7 +196,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -226,7 +229,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -259,7 +262,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -275,24 +278,17 @@ class Admin extends MY_Controller {
 
 	}
 
-
+	/**
+	 * update_setting
+	 */
 	public function update_setting() {
-		if ( isset( $_POST['setting_ip_col'] ) ) {
+		$id    = $this->input->post('id_option');
+		$value = $this->input->post('setting_ip_value');
 
-			$id    = $_POST['id_option'];
-			$value = $_POST['setting_ip_value'];
+		$arr['value'] = $value;
+		$this->db->update( "hd_option", $arr, array( 'id' => $id ) );
 
-			$arr['value'] = $value;
-			$this->db->update( "hd_option", $arr, array( 'id' => $id ) );
-
-			echo 'ok';
-
-		} else {
-
-			redirect( URL . '404page' );
-
-		}
-
+		echo 'ok';
 	}
 
 	public function update_infor_ad() {
@@ -300,7 +296,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -377,7 +373,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -443,7 +439,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -490,7 +486,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -527,7 +523,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -607,7 +603,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -693,7 +689,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -744,7 +740,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -830,7 +826,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -930,7 +926,7 @@ class Admin extends MY_Controller {
 		if ( $this->check_session_user() == 0 ) {
 
 			redirect( URL . 'login' );
-			
+
 
 		} else {
 
@@ -978,7 +974,7 @@ class Admin extends MY_Controller {
 
 		} else {
 
-			redirect( URL . '404page');
+			redirect( URL . '404page' );
 
 		}
 
@@ -1004,7 +1000,7 @@ class Admin extends MY_Controller {
 
 		} else {
 
-			redirect( URL . '404page');
+			redirect( URL . '404page' );
 
 		}
 
@@ -1033,7 +1029,7 @@ class Admin extends MY_Controller {
 
 		} else {
 
-			redirect( URL . '404page');
+			redirect( URL . '404page' );
 
 		}
 
@@ -1074,6 +1070,10 @@ class Admin extends MY_Controller {
 
 					$data["page_des"] = "Danh sách trang";
 
+				} else if ( $post_type == 'message' ) {
+					$data["page_title"] = "Thông báo";
+					$data["page_des"]  = "Danh sách thông báo";
+					$data['page_slug'] = "message_list";
 				} else if ( $post_type != 'post' ) {
 
 					if ( $post_type == 'widget' ) {
@@ -1202,6 +1202,22 @@ class Admin extends MY_Controller {
 
 				$data["table"] = "sanpham";
 
+			}
+
+			if($post_type=='message')
+			{
+				$data["page_slug"]   = "message_list";
+				$data["post_type"] = $post_type;
+
+				// get list
+				$data['message'] = $this->db->get( 'hd_messages', $this->perPage, $offset )->result();
+				if ( $filter = $this->input->get( 'title_post_filter' ) )
+				{
+					$data['message'] = $this->db
+						->like( 'title', $filter )
+						->get( 'hd_messages', $this->perPage, $offset )
+						->result();
+				}
 			}
 
 			$data["pagination"] = $pagination;
@@ -1576,12 +1592,53 @@ class Admin extends MY_Controller {
 
 			}
 
+			if ( isset( $_GET['post_type'] ) ) {
+				$post_type = $this->input->get( 'post_type' );
+
+				//
+				// thông báo
+				//
+				if ( $post_type == 'message' ) {
+					//$data = [];
+
+					$data["table"]="hd_messages";
+
+					$data["post_type"] = "message";
+					$data["page_slug"] = "message";
+
+					$data["page_title"] = "Thông báo";
+					$data["page_des"]   = "Thêm thông báo mới";
+
+					//
+					$db_columns = $this->db->list_fields( 'hd_messages' );
+					foreach ( $db_columns as $col ) {
+						$data[ $col ] = null;
+						if ( $col == 'status' ) {
+							$data[ $col ] = 1;
+						}
+					}
+				}
+			}
+
+			if ( isset( $_GET['edit'] ) && ! empty( $_GET['edit'] ) ) {
+				$id      = $this->input->get( 'edit' );
+				$message = $this->db->where( 'id', $id )->get( 'hd_messages' );
+
+				if ( $message->num_rows() == 1 ) {
+					$message    = $message->row();
+					$db_columns = $this->db->list_fields( 'hd_messages' );
+
+					//$data = [];
+					foreach ( $db_columns as $col ) {
+						$data[ $col ] = $message->{$col};
+					}
+
+					unset( $data['id'] );
+				}
+			}
 
 			$this->load->view( 'admin/page', $data );
-
-
 		}
-
 	}
 
 	public function mail_view() {
@@ -2187,7 +2244,7 @@ class Admin extends MY_Controller {
 
 		} else {
 
-			redirect( URL . '404page');
+			redirect( URL . '404page' );
 
 		}
 
@@ -2509,6 +2566,92 @@ class Admin extends MY_Controller {
 
 	}
 
+	/**
+	 * ajax call
+	 *
+	 * insert_message
+	 * @throws Exception
+	 */
+	public function insert_message() {
+		$status     = $this->input->post( 'status' );
+		$link_dr    = $this->input->post( 'link_dr' );
+		$action     = $this->input->post( 'action' );
+		$updated_at = $this->input->post( 'updated_at' );
 
+		$arr = array(
+			'title'   => $this->input->post( 'title' ),
+			'content' => $this->input->post( 'content' ),
+			'url'     => trim( $this->input->post( 'url' ) ),
+		);
+
+		if ( $status ) {
+			$arr['status'] = 1;
+		}
+
+		if ( 'add' == $action ) {
+			$arr['created_at'] = now();
+			$arr['updated_at'] = now();
+
+			// insert
+			$this->session->set_flashdata( 'message', 'Thêm thông báo thành công.' );
+			if ( ! $this->db->insert( 'hd_messages', $arr ) ) {
+				$this->session->set_flashdata( 'message', 'Không thể thêm thông báo mới.' );
+			}
+		} else {
+			$id                = $this->input->post( 'edit' );
+			$arr['updated_at'] = strtotimetz( $updated_at );
+
+			$this->session->set_flashdata( 'message', 'Cập nhật thành công.' );
+			if ( ! $this->db->update( 'hd_messages', $arr, [ 'id' => $id ] ) ) {
+				$this->session->set_flashdata( 'message', 'Không thể cập nhật.' );
+			}
+
+			$link_dr .= '&edit=' . $id;
+		}
+
+		if ( is_ajax_request() ) {
+			echo json_encode( [ 'callback' => $link_dr ] );
+		}
+	}
+
+	/**
+	 * @param $id
+	 */
+	public function message_row_remove( $id ) {
+		$item = $this->db->where( 'id', $id )->get( 'hd_messages' );
+		if ( $item->num_rows() === 1 ) {
+			$this->db->delete( 'hd_messages', [ 'id' => $id ] );
+		}
+	}
+
+	/**
+	 * all_action_message
+	 */
+	public function all_action_message()
+	{
+		if ( isset( $_POST['action'] ) || isset( $_POST['list_id'] ) )
+		{
+			$action  = $this->input->post( 'action' );
+			$list_id = $this->input->post( 'list_id' );
+			$list_id_ex = explode( ',', $list_id );
+			foreach ( $list_id_ex as $row_list_id_ex )
+			{
+				if ( $action == 'unactive' )
+				{
+					$this->db->update( 'hd_messages', [ 'status' => 0 ], [ 'id' => $row_list_id_ex ] );
+				}
+				else if ( $action == 'active' )
+				{
+					$this->db->update( 'hd_messages', [ 'status' => 1 ], [ 'id' => $row_list_id_ex ] );
+				}
+				else if ( $action == 'remove' )
+				{
+					$this->db->delete( 'hd_messages', [ 'id' => $row_list_id_ex ] );
+				}
+			}
+		} else {
+			header( 'Location: ' . URL . '404page' );
+		}
+	}
 }
 

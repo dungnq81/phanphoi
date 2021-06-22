@@ -26,6 +26,8 @@
 	<link href="<?php echo(BC_AD.'bootstrap-timepicker/css/bootstrap-timepicker.min.css'); ?>" rel="stylesheet" >
 	<link href="<?php echo(BC_AD.'bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css'); ?>" rel="stylesheet" >
 	<script src="<?php echo(BC_AD.'bootstrap-timepicker/js/bootstrap-timepicker.js'); ?>"></script>
+	<script src="<?php echo(BC_AD.'moment/min/moment.min.js'); ?>"></script>
+	<script src="<?php echo(BC_AD.'bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'); ?>"></script>
 	<script src="<?php echo(BC_AD.'Sorting-Select/jquery.dragoptions.js'); ?>"></script>
 	<link rel="icon" href="<?php echo $this->admin_model->select_value_table_dk_col('option','name','="favicon"','value')?>" type="image/gif" sizes="32x32">
 

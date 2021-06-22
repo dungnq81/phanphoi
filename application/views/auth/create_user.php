@@ -1,6 +1,6 @@
 <section class="identity-section register-section">
 	<div class="modal-header">
-		<h3 class="modal-title"><?php echo __( 'create_user_heading' ); ?></h3>
+		<h3 class="modal-title"><?php echo @$title ?></h3>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
 		</button>
@@ -8,10 +8,10 @@
 	<div class="modal-body">
 		<p class="desc"><?php echo __( 'create_user_subheading' ); ?></p>
 		<div id="infoMessage"><?php echo @$message; ?></div>
-		<?php echo form_open( "users/register?_action=add_user", [ 'id' => "register_form", 'class' => @$class ] ); ?>
+		<?php echo form_open( base_url() . "users/register?_action=add_user", [ 'id' => "register_form", 'class' => @$class ] ); ?>
 		<div class="form-group">
 			<?php echo __('create_user_fullname_label', 'fullname');?>
-			<input id="fullname" type="text" name="fullname" placeholder="Họ và tên">
+			<input id="fullname" type="text" name="fullname" pattern="^(.*\S+.*)$" placeholder="Họ và tên">
 		</div>
 		<div class="form-group">
 			<?php echo __('create_user_email_label', 'email');?>
@@ -28,13 +28,13 @@
 		</div>
 		<div class="form-group">
 			<?php echo __('create_user_password_confirm_label', 'password_confirm');?>
-			<input id="password_confirm" type="password" required name="password_confirm" pattern="" placeholder="Mật khẩu">
+			<input id="password_confirm" type="password" required name="password_confirm" pattern="" placeholder="Xác nhận mật khẩu">
 		</div>
 		<div class="form-group btn-group">
 			<button type="submit" class="button"><?php echo __( 'create_user_submit_btn' )?></button>
 		</div>
 		<?php echo form_hidden('_action', 'add_user'); ?>
-		<p class="login">Bạn đã có tài khoản? <a href="/users/login" title="Đăng nhập">Đăng nhập</a></p>
+		<p class="login">Bạn đã có tài khoản? <a href="<?=base_url()?>users/login<?=redirect_get( $this->input->get('redirect_to'))?>" title="Đăng nhập">Đăng nhập</a></p>
 		<?php echo form_close(); ?>
 	</div>
 </section>

@@ -22,7 +22,7 @@
 					var json = JSON.parse(data);
 					infoMessage.html(json.message);
 					if ( json.status === 'success' ) {
-						redirect(null, 1000);
+						redirect(json.redirect_to, 400);
 					}
 				}
 			});

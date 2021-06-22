@@ -22,8 +22,6 @@ class Users extends MY_Controller {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->current_user = $this->auth->user()->row();
-
 		$this->load->libraries( [
 			'email',
 			'form_validation',
@@ -78,6 +76,130 @@ class Users extends MY_Controller {
 		];
 	}
 
+	/*****************************************************/
+
+	/**
+	 * use_points
+	 */
+	public function use_points() {
+		$points = $this->input->post('points');
+		if ( ! $this->auth->logged_in() ) {
+			echo 'no_login';
+			die();
+		}
+
+		$this->current_user = $this->auth->user()->row();
+		$user_points = $this->current_user->points;
+		if ($user_points < $points) {
+			echo 'not_enough';
+			die();
+		}
+
+		$this->session->set_userdata( [
+			'points' => $points,
+			'point_user_id' => $this->current_user->id,
+		] );
+
+		echo $points;
+		die();
+	}
+
+	public function order() {
+		$this->data['title'] = 'Lịch sử đơn hàng của bạn';
+		$this->data['class'] = 'user-order-list';
+
+		if ( ! $this->auth->logged_in() ) {
+			redirect( 'users/login' . redirect_get( current_url() ) );
+		}
+
+		$this->current_user = $this->auth->user()->row();
+		$this->data['user'] = $this->current_user;
+
+		$this->_render_page( 'content/partials/header' );
+		$this->_render_page( 'auth/order', $this->data );
+		$this->_render_page( 'content/partials/footer' );
+	}
+
+	/**
+	 * ajax func
+	 */
+	public function read_message() {
+		$message_id = $this->input->post( 'message' );
+		$user_id = $this->input->post( 'user' );
+
+		$_check = $this->db->where( 'users_id', $user_id)
+		                   ->where( 'messages_id', $message_id )
+		                   ->get( 'hd_users_messages', 1);
+
+		if ( $_check->num_rows() < 1 ) {
+			$data = [
+				'users_id' => $user_id,
+				'messages_id' => $message_id
+			];
+
+			$this->db->insert( 'hd_users_messages', $data );
+		}
+	}
+
+	/**
+	 * profile
+	 */
+	public function profile() {
+		$this->data['title'] = __( 'edit_user_heading' );
+		$this->data['class'] = 'profile-form identity-form';
+
+		if ( ! $this->auth->logged_in() ) {
+			redirect( 'users/login' . redirect_get( current_url() ) );
+		}
+
+		$this->current_user = $this->auth->user()->row();
+
+		// validate form input
+		$this->form_validation->set_rules( 'phone', __( 'edit_user_phone_label' ), $this->auth->unique_phone ? 'trim|required|min_length[6]|callback__phone_update_check' : 'trim|min_length[6]' );
+		if ( isset( $_POST ) && ! empty( $_POST ) ) {
+
+			// do we have a valid request?
+			if ( $this->_valid_csrf_nonce() === false ) {
+				show_error( __( 'error_csrf' ) );
+			}
+
+			// update the password if it was posted
+			if ( $this->input->post( 'password' ) ) {
+				$this->form_validation->set_rules( 'password', __( 'edit_user_validation_password_label' ), 'trim|min_length[3]' );
+				$this->form_validation->set_rules( 'password_confirm', __( 'edit_user_validation_password_confirm_label' ), 'trim|matches[password]' );
+			}
+
+			$data = [
+				'fullname' => $this->input->post( 'fullname' ),
+				'phone'    => $this->input->post( 'phone' ),
+				'address'  => $this->input->post( 'address' ),
+				'gender'   => $this->input->post( 'gender' ),
+				'birthday' => trim( $this->input->post( 'birthday' ) ),
+			];
+
+			// update the password if it was posted
+			if ( $this->input->post( 'password' ) ) {
+				$data['password'] = $this->input->post( 'password' );
+			}
+
+			if ( $this->form_validation->run() === true && $this->auth->update_user( $this->current_user->id, $data ) ) {
+
+				// check to see if we are updating the user
+				$this->session->set_flashdata( 'message', $this->auth->messages() );
+			}
+		}
+
+		$this->data['user'] = $this->auth->user()->row();
+		$this->data['csrf'] = $this->_get_csrf_nonce();
+
+		// set the flash data error message if there is one
+		$this->data['message'] = ( validation_errors() ?: ( $this->auth->errors() ?: $this->session->flashdata( 'message' ) ) );
+
+		$this->_render_page( 'content/partials/header' );
+		$this->_render_page( 'auth/edit_user', $this->data );
+		$this->_render_page( 'content/partials/footer' );
+	}
+
 	/**
 	 * Method to register a new user
 	 */
@@ -85,7 +207,7 @@ class Users extends MY_Controller {
 		$this->data['title'] = __( 'create_user_heading' );
 		$this->data['class'] = 'register-form identity-form';
 
-		if ( $this->current_user ) {
+		if ( $this->auth->logged_in() ) {
 			$this->session->set_flashdata( 'notice', __( 'already_logged_in' ) );
 			redirect( 'users/profile' );
 		}
@@ -134,7 +256,7 @@ class Users extends MY_Controller {
 		$this->form_validation->set_rules( $this->_login_validation_rules );
 
 		// If the validation worked, or the user is already logged in
-		if ( $this->current_user || $this->form_validation->run() ) {
+		if ( $this->auth->logged_in() || $this->form_validation->run() ) {
 
 			// Kill the session
 			$this->session->unset_userdata( 'redirect_to' );
@@ -167,8 +289,12 @@ class Users extends MY_Controller {
 		$this->form_validation->set_rules( $this->_login_validation_rules );
 
 		// If the validation worked, or the user is already logged in
-		if ( $this->current_user || $this->form_validation->run() === true ) {
-			die( json_encode( [ 'status' => 'success', 'message' => __( 'login_successful' ) ] ) );
+		if ( $this->auth->logged_in() || $this->form_validation->run() === true ) {
+			die( json_encode( [
+				'status'      => 'success',
+				'message'     => __( 'login_successful' ),
+				'redirect_to' => $this->input->post( 'redirect_to' )
+			] ) );
 		}
 
 		die( json_encode( [ 'status' => 'error', 'message' => validation_errors() ] ) );
@@ -183,9 +309,12 @@ class Users extends MY_Controller {
 		$this->session->set_flashdata( 'success', __( "logged_out" ) );
 
 		// if they were trying to go someplace besides the dashboard we'll have stored it in the session
-		$_redirect = $this->session->userdata( '_redirect' );
-		$this->session->unset_userdata( '_redirect' );
-		redirect( $_redirect ?: 'users/login' );
+		$redirect_to = ( $this->input->get( 'redirect_to' ) )
+			? trim( urldecode( $this->input->get( 'redirect_to' ) ) )
+			: $this->session->userdata( 'redirect_to' );
+
+		$this->session->unset_userdata( 'redirect_to' );
+		redirect( $redirect_to ?: '/' );
 	}
 
 	/**
@@ -249,6 +378,22 @@ class Users extends MY_Controller {
 	}
 
 	/**
+	 * @param $id
+	 * @param $phone
+	 *
+	 * @return bool
+	 */
+	public function _phone_update_check( $phone ) {
+		if ( ! $this->auth->phone_update_check( $this->current_user->id, $phone ) ) {
+			$this->form_validation->set_message( '_phone_update_check', __( 'error_phone' ) );
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * @param $view
 	 * @param null $data
 	 * @param false $returnhtml
@@ -263,5 +408,30 @@ class Users extends MY_Controller {
 		if ( $returnhtml ) {
 			return $view_html;
 		}
+	}
+
+	/**
+	 * @return array A CSRF key-value pair
+	 */
+	public function _get_csrf_nonce() {
+		$this->load->helper( 'string' );
+		$key   = random_string( 'alnum', 8 );
+		$value = random_string( 'alnum', 20 );
+		$this->session->set_flashdata( 'csrfkey', $key );
+		$this->session->set_flashdata( 'csrfvalue', $value );
+
+		return [ $key => $value ];
+	}
+
+	/**
+	 * @return bool Whether the posted CSRF token matches
+	 */
+	public function _valid_csrf_nonce() {
+		$csrfkey = $this->input->post( $this->session->flashdata( 'csrfkey' ) );
+		if ( $csrfkey && $csrfkey === $this->session->flashdata( 'csrfvalue' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

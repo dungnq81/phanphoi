@@ -1,8 +1,10 @@
+<div class="cart-wrapper">
 <div class="container no-padding post-wrapper">
+	<?php $this->load->view('content/template-parts/breadcrumb',$ten_postpr_post);  ?>
 	<h2 class="title-post"><?php echo $ten_post; ?></h2>
 	<div class="details-post-gr">
 		<div class="col-lg-12 col-md-12 col-xs-12 no-padding details-post details-giohang main-page">
-			<?php $this->load->view('content/template-parts/breadcrumb',$ten_postpr_post);  ?>
+
 			<div class="entry-post list-cart">
 				<?php if($this->cart->contents()){ ?>
 					<div class="col-md-8 col-sm-12 col-xs-12 no-padding details-giohang-tbl">
@@ -80,9 +82,9 @@
 						            	<a href="<?php echo $url_sp; ?>" title="<?php echo $ten_sp; ?>" ><?php echo $ten_sp; ?></a><br>
 						            	<b><?php echo $text_thuoctinh; ?></b>
 						            </td>
-						            <td><?php echo number_format($gia_sp); ?></td>
+						            <td style="color: #c91508;"><?php echo number_format($gia_sp); ?></td>
 						            <td><input type="number" value="<?php echo $cart['qty']; ?>" name="number_qty_sp" min="1" id="<?php echo $cart['rowid']; ?>"></td>
-						            <td><b><?php echo number_format($cart['qty']*$gia_sp_have_baohanh); ?></b></td>
+						            <td><b style="color: #c91508;"><?php echo number_format($cart['qty']*$gia_sp_have_baohanh); ?></b></td>
 						            <td><a class="delete_cart" id="<?php echo $cart['rowid']; ?>"><i class="fa fa-trash"></i></a></td>
 						        </tr>
 					        <?php } ?>
@@ -101,15 +103,15 @@
 							<table cellspacing="0" class="shop_table shop_table_responsive">
 								<tbody>
 									<tr class="cart-subtotal">
-										<th>Tổng cộng</th>
+										<th>Giá: </th>
 										<td><span class="Price-amount amount"><?php echo $this->functions->formatMoney($total); ?><span class="Price-currencySymbol">₫</span></span></td>
 									</tr>
 									<tr class="shipping">
-										<th>Giao hàng</th>
+										<th>Phí giao hàng: </th>
 										<td>Phí ship tùy khu vực</td>
 									</tr>
 									<tr class="order-total">
-										<th>Tổng cộng</th>
+										<th>Tổng cộng: </th>
 										<td>
 											<strong>
 												<span class="Price-amount amount"><?php echo $this->functions->formatMoney($total); ?><span class="Price-currencySymbol">₫</span></span>
@@ -129,4 +131,5 @@
 			</div>
 		</div>		
 	</div>
+</div>
 </div>

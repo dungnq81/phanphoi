@@ -95,6 +95,23 @@ class Auth extends Library {
 	}
 
 	/**
+	 * @param $id
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	public function update_user ($id, array $data = []) {
+		$bool = $this->user_model->update_user( $id, $data );
+		if ($bool) {
+			$this->set_message( __( 'update_successful' ) );
+			return true;
+		}
+
+		$this->set_error( __( 'update_unsuccessful' ) );
+		return false;
+	}
+
+	/**
 	 * @param $email
 	 * @param null $password
 	 * @param null $phone

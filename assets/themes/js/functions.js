@@ -21,6 +21,7 @@ function redirect(url = null, $delay = 0) {
 			window.location.reload(true);
 		} else {
 			url = url.replace(/\s+/g, '');
+			document.location.assign(url);
 			window.location = url;
 		}
 	}, $delay);

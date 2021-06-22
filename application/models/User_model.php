@@ -103,6 +103,7 @@ class User_model extends MY_Model {
 		// check exist
 		if ( ! $this->user_session( $user_id ) ) {
 			$this->logout( false );
+
 			return false;
 		}
 
@@ -118,12 +119,12 @@ class User_model extends MY_Model {
 		// check for valid cookie
 		$user_id       = get_cookie( 'user_id' );
 		$remember_code = get_cookie( 'user_remember_code' );
-		if ( empty( $remember_code ) or ! $this->user_session( $user_id ) ) {
+		if ( empty( $remember_code ) || ! $this->user_session( $user_id ) ) {
 			return false;
 		}
 
 		$user = $this->user( $user_id )->row();
-		if ( strcmp( $user->status, 'active' ) === 0 and strcmp( $user->remember_code, $remember_code ) === 0 ) {
+		if ( strcmp( $user->status, 'Active' ) === 0 and strcmp( $user->remember_code, $remember_code ) === 0 ) {
 			// update last login time
 			$this->_update_last_login( $user );
 			$this->session->set_userdata( [
@@ -239,6 +240,7 @@ class User_model extends MY_Model {
 		}
 
 		$check = password_verify( $password, base64_decode( substr( $user->password, strlen( $this->_hash_prefix ) ) ) );
+
 		return $check ? true : false;
 	}
 
@@ -285,11 +287,11 @@ class User_model extends MY_Model {
 			delete_cookie( 'user_remember_code' );
 
 			// remove remember code, remove on all devices
-			$this->update( $user_id, [ 'remember_code' => '' ] );
+			$this->update( $user_id, [ 'remember_code' => null ] );
 
 			// Destroy the current session when it is called
-			$this->session->sess_destroy();
-			$this->session->sess_regenerate( true );
+			//$this->session->sess_destroy();
+			//$this->session->sess_regenerate( true );
 		}
 	}
 
@@ -425,7 +427,7 @@ class User_model extends MY_Model {
 				return false;
 			}
 
-			if ($this->unique_phone == true) {
+			if ( $this->unique_phone == true ) {
 				if ( ! array_key_exists( 'phone', $data ) || ! $this->phone_check( $data['phone'] ) ) {
 					return false;
 				}
@@ -438,13 +440,14 @@ class User_model extends MY_Model {
 				$data['verified_phone'] = verified_phone( $data['phone'] );
 			}
 
-			$data['password'] = $this->_hash_password( $data['password'] );
+			$data['password']   = $this->_hash_password( $data['password'] );
 			$data['ip_address'] = $this->input->ip_address();
 			$data['created_at'] = now();
 			$data['updated_at'] = now();
-			$insert_id        = $this->insert( $data );
+			$insert_id          = $this->insert( $data );
 
 			$this->db->trans_complete();
+
 			return ( $this->db->trans_status() === false ) ? false : $insert_id;
 		}
 

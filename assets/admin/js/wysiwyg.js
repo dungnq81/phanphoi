@@ -16,18 +16,20 @@
 					"template textpattern toc visualblocks visualchars wordcount"
 				],
 				toolbar: [
-					"formatselect bold italic underline strikethrough blockquote bullist numlist alignjustify alignleft aligncenter alignright outdent indent link unlink fullscreen",
-					"undo redo print removeformat searchreplace charmap table forecolor backcolor hr superscript subscript codesample responsivefilemanager visualchars code help"
+					"formatselect bold italic underline strikethrough blockquote bullist numlist alignjustify alignleft aligncenter alignright link unlink fullscreen",
+					"print removeformat searchreplace charmap table forecolor backcolor hr superscript subscript codesample responsivefilemanager visualchars code help"
 				],
 				block_formats: 'Paragraph=p;H1=h1;H2=h2;H3=h3;H4=h4;H5=h5;H6=h6;Preformatted=pre;Div=div;',
 				quickbars_insert_toolbar: false,
 				quickbars_selection_toolbar: "bold italic quicklink removeformat h2 h3 forecolor blockquote",
 				help_tabs: ['shortcuts'],
 				browser_spellcheck : true,
+				relative_urls : false,
+				remove_script_host: false,
 				menubar: false,
-				height: 400,
-				visualblocks_default_state: true,
-				content_style: ".mce-content-body {font-size:20px;}",
+				min_height: 500,
+				//visualblocks_default_state: true,
+				content_style: ".mce-content-body {font-size: 18px;}",
 				convert_urls: false,
 				forced_root_block : 'p',
 

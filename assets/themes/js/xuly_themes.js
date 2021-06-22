@@ -705,10 +705,9 @@
 		if(number_pr_to_cart<0 || number_pr_to_cart==0){
 			alert('Số lượng ít nhất phải là 1');
 		}else{
-			$.ajax(		
-				{    
+			$.ajax({
 					type: 'POST',
-					url: 'page/insert_cart',    
+					url: BASE_URL + 'page/insert_cart',
 					data:{				
 						'id_sanpham':id_sanpham,
 						'name_sanpham':id_sanpham,
@@ -717,32 +716,27 @@
 						'text_thuoctinh':text_thuoctinh,
 						'goibaohanh': goibaohanh,
 						'number_pr_to_cart': number_pr_to_cart
-					},            
-					success: function(data){		
-						$('.single_add_to_cart_button span').empty().html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý ...');		
-						setTimeout(function() {
-								//alert(data);
-								if(data=0){
-									alert('Thêm sản phẩm thất bại !');
-								}else{
-									alert('Thêm sản phẩm vào giỏ hàng thành công !');
-									var cart_count_current=parseFloat($('#cart-header span').text());
-									cart_count_current=cart_count_current+parseFloat(number_pr_to_cart);
-									//console.log(cart_count_current);
-									$('#cart-header span').empty().text(cart_count_current);
-									$('input[name=number_pr_to_cart]').val('1');
-									//window.location.href=link_giohang;
-									$('.single_add_to_cart_button span').empty().html('Giao tận nơi hoặc nhận ở cửa hàng');
+					},
+					beforeSend: function() {
+						$('.single_add_to_cart_button span').empty().html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý ...');
+					},
+					success: function(data){
+						if(data==0){
+							alert('Thêm sản phẩm thất bại !');
+						}else{
+							alert('Thêm sản phẩm vào giỏ hàng thành công !');
 
-									redirect("https://phanphoi.com.vn/gio-hang");
-								}			
-							},1500	
-						);            
+							$('.single_add_to_cart_button span').empty().html('Giao tận nơi hoặc nhận ở cửa hàng');
+							var cart_count_current = parseFloat($('#cart-header span').text());
+							cart_count_current = cart_count_current + parseFloat(number_pr_to_cart);
+							$('#cart-header span').empty().text(cart_count_current);
+							$('input[name=number_pr_to_cart]').val('1');
+							redirect(BASE_URL + "gio-hang", 400);
+						}
 					}			
 				}		
 			);
 		}
-			
 	});
 	$(document).on('click','.delete_cart',function(e){
 	    var rowid = $( this ).attr('id');
@@ -822,7 +816,10 @@
 	  	$(class_open).show();
 	  	//console.log(class_open);
 	});
-	$(document).on('click','.checkout-button',function(e){
+
+	$(document).on('submit','form[name="frm-thongtinthanhtoan"]',function(e) {
+
+		e.preventDefault();
 
 		var hoten = $('.frm-thongtinthanhtoan input[name="hoten"]').val();
 		var email = $('.frm-thongtinthanhtoan input[name="email"]').val();
@@ -886,27 +883,37 @@
 		        tt_khachhang.push($('label[for='+$(this).attr('name')+']').text());
 		 	 	vl_khachhang.push($(this).val());
 			});
-			//console.log(formElements_name);
-	 	 	$.ajax({    
+
+			var user_id = $('input[name="user_id"]').val();
+			var totals = $('input[name="totals"]').val();
+			var pointsx = $('input[name="pointsx"]').val();
+
+	 	 	$.ajax({
 				type: 'POST',
-				url: 'page/insert_donhang',    
-				data:{				
-					'tt_khachhang':tt_khachhang,
-					'vl_khachhang':vl_khachhang,
-					'tt_sanpham':tt_sanpham,
-					'type_thanhtoan':type_thanhtoan
-				},            
-				success: function(data){		
-					$('.alert-checkout-button').empty().html('<i class="fa fa-spinner fa-spin"></i> Vui lòng đợi trong giây lát ...');		
-					setTimeout(function() {
-						//console.log(data);
-						if(data=="0"){
-							alert('Xảy ra lỗi trong quá trình xử lý, vui lòng thử lại');
-						}else{
-							//alert(data) ;
-							window.location.href=data;
-						}			
-					},2000);            
+				url: BASE_URL + 'page/insert_donhang',
+				data:{
+					'tt_khachhang': tt_khachhang,
+					'vl_khachhang': vl_khachhang,
+					'tt_sanpham': tt_sanpham,
+					'type_thanhtoan': type_thanhtoan,
+					'user_id': user_id,
+					'email': email,
+					'totals': totals,
+					'pointsx': pointsx,
+				},
+				beforeSend: function() {
+					$('.alert-checkout-button').empty().html('<i class="fa fa-spinner fa-spin"></i> Vui lòng đợi trong giây lát ...');
+					$('#frm-checkout').find(':submit').prop('disabled', true);
+				},
+				success: function(data){
+					$('#frm-checkout').find(':submit').prop('disabled', false);
+					$('.alert-checkout-button').fadeOut().empty();
+
+					if(data=="0"){
+						alert('Xảy ra lỗi trong quá trình xử lý, vui lòng thử lại');
+					}else{
+						redirect(data, 400);
+					}
 				}			
 			});
 		}
@@ -1248,30 +1255,6 @@
 	    }
 	});
 })(jQuery);
-
-function redirect(url) {
-	if (url === null || url === '' || typeof url === "undefined") {
-		if (!window.location.hash)
-			window.location.href = window.location.href;
-		else
-			window.location.reload();
-	} else {
-		url = url.replace(/\s+/g, '');
-		var ua = navigator.userAgent.toLowerCase(),
-			isIE = ua.indexOf('msie') !== -1,
-			version = parseInt(ua.substr(4, 2), 10);
-		/* Internet Explorer 8 and lower */
-		if (isIE && version < 9) {
-			var link = document.createElement('a');
-			link.href = url;
-			document.body.appendChild(link);
-			link.click();
-		} else {
-			window.location.replace(url);
-			window.location.href = url;
-		}
-	}
-}
 
 /**
  *

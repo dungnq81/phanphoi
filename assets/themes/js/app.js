@@ -7,10 +7,66 @@
 
 		$(window).on("load", function () {
 			var _action = $.query.get('_action');
-			if(_action) {
+			var _redirect_to = $.query.get('redirect_to');
+			if (_action || _redirect_to) {
 				pushState({}, document.title, window.location.href.split(/[?#]/)[0]);
 			}
 		});
+
+		$('.points-dropdown a').on('click', function (event) {
+			event.preventDefault();
+			$(this).parent().toggleClass('open');
+		});
+		$('.btn-points').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL + "users/use_points",
+				data: {
+					points: $("#points").val()
+				},
+				success: function (data) {
+					if (data == 'not_enough') {
+						alert('Bạn không đủ điểm thưởng');
+					}
+					else {
+						redirect(BASE_URL + 'thanh-toan', 100);
+					}
+				}
+			});
+		})
+
+		/************************************/
+
+		var notify_box = $('.notify-box');
+		notify_box.find('.unread a').on('click', function () {
+			$.ajax({
+				type: 'POST',
+				url: BASE_URL + "users/read_message",
+				data: {
+					message: $(this).data('message'),
+					user: $(this).data('user'),
+				}
+			});
+		});
+
+		/************************************/
+		var dateClass = '.date-input';
+		if (document.querySelector(dateClass) && document.querySelector(dateClass).type !== 'date') {
+			var oCSS = document.createElement('link');
+			oCSS.type = 'text/css';
+			oCSS.rel = 'stylesheet';
+			oCSS.href = '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css';
+			oCSS.onload = function () {
+				var oJS = document.createElement('script');
+				oJS.type = 'text/javascript';
+				oJS.src = '//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js';
+				oJS.onload = function () {
+					$(dateClass).datepicker();
+				}
+				document.body.appendChild(oJS);
+			}
+			document.body.appendChild(oCSS);
+		}
 
 		/************************************/
 
@@ -26,14 +82,11 @@
 		/************************************/
 		var rating_inner = $(".rating--inner");
 		var rating_data = rating_inner.data('id');
-
-		rating_inner.not( $( ".selected" ) ).find('li').on('click', function (e) {
+		rating_inner.not($(".selected")).find('li').on('click', function (e) {
 			e.preventDefault();
 			rating_inner.find('li').removeClass('active');
-
 			var _target = $(this);
 			$(this).addClass('active');
-
 			$.ajax({
 				type: 'POST',
 				url: BASE_URL + "page/rating",
